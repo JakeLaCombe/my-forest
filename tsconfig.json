@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
-    "lib": [
-      "es2015",
-      "dom"
-    ],
-    "target": "es6",
-    "noImplicitAny": true,
-    "module": "commonjs",
-    "strict": true
-  }
+      "target": "ES6",
+      "moduleResolution": "node",
+      "strict": true
+  },
+  "include": ["**/*.ts"]
 }
