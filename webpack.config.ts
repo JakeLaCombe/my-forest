@@ -1,4 +1,9 @@
-import * as path from 'path'
+const path = require("path");
+const fs = require("fs");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const appDirectory = fs.realpathSync(process.cwd());
+
 
 export default {
   mode: 'development',
@@ -39,6 +44,13 @@ export default {
       // },
     ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+        inject: true,
+        template: path.resolve(appDirectory, "index.html"),
+    }),
+    new CleanWebpackPlugin(),
+ ],
   watchOptions: {
     ignored: /node_modules/
   }

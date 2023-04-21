@@ -5,7 +5,8 @@
     "start": "webpack serve",
     "start:open": "webpack serve --open",
     "build": "webpack --mode=production",
-    "lint": "eslint \"**/*.ts\""
+    "lint": "eslint \"**/*.ts\"",
+    "deploy-ghpages": "gh-pages -d dist"
   },
   "dependencies": {
     "three": "~0.151.3"
@@ -16,8 +17,11 @@
     "@types/webpack": "^5.28.1",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
+    "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.38.0",
     "file-loader": "^6.2.0",
+    "gh-pages": "^5.0.0",
+    "html-webpack-plugin": "^5.5.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
