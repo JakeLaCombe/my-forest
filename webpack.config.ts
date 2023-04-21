@@ -18,7 +18,6 @@ export default {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -33,12 +32,16 @@ export default {
       {
          test: /\.(jpe?g|png|svg|gif|glb|gltf|ico|eot|ttf|woff|woff2|mp4|pdf|webm|txt)$/,
          type: 'asset/resource'
-      },
+      }
       // {
       //   test: /\.(jpe?g|png|svg|gif|glb|gltf|ico|eot|ttf|woff|woff2|mp4|pdf|webm|txt)$/,
       //   use: [
       //     {
       //       loader: 'file-loader',
+      //       options: {
+      //         publicPath: './',
+      //         name: '[name].[ext]'
+      //       }
       //     },
       //   ],
       // },

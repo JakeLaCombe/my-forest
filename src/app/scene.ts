@@ -12,7 +12,6 @@ export class GameScene {
     private cube: Mesh;
     private renderer: WebGLRenderer;
     private forestModel: GLTF | null = null;
-    private baseReference: XRReferenceSpace | null = null;
     private controller1: XRTargetRaySpace;
     private controller2: XRTargetRaySpace;
     private tempMatrix: Matrix4 = new Matrix4();
@@ -72,8 +71,9 @@ export class GameScene {
         }
 
         this.controller1 = this.renderer.xr.getController( 0 );
-        this.controller1.addEventListener( 'selectstart', this.onSelectStart );
-        this.controller1.addEventListener( 'selectend', this.onSelectEnd );
+        this.controller1.name = "VR Controller 1";
+        this.controller1.addEventListener( 'selectstart', this.onSelectStart.bind(this) );
+        this.controller1.addEventListener( 'selectend', this.onSelectEnd.bind(this) );
         this.controller1.addEventListener( 'connected', ( event: Event & {target: XRTargetRaySpace} & {data? : XRInputSource}) => {
             if (event.data) {
                 let pointer = this.buildController(event.data);
@@ -91,8 +91,9 @@ export class GameScene {
 
        
         this.controller2 = this.renderer.xr.getController( 1 );
-        this.controller2.addEventListener( 'selectstart', this.onSelectStart );
-        this.controller2.addEventListener( 'selectend', this.onSelectEnd );
+        this.controller2.name = "VR Controller 2";
+        this.controller2.addEventListener( 'selectstart', this.onSelectStart.bind(this) );
+        this.controller2.addEventListener( 'selectend', this.onSelectEnd.bind(this) );
         this.controller2.addEventListener( 'connected', ( event: Event & {target: XRTargetRaySpace} & {data? : XRInputSource}) => {
             if (event.data) {
                 let pointer = this.buildController(event.data);
@@ -121,8 +122,10 @@ export class GameScene {
 
         //this.renderer.xr.setReferenceSpaceType('bounded-floor');
         this.renderer.xr.addEventListener('sessionstart', () => {
-            this.baseReference = this.renderer.xr.getReferenceSpace()
+            this.baseReferenceSpace = this.renderer.xr.getReferenceSpace() || undefined;
         });
+
+        console.log(this.controller2);
     }
 
     buildController( data: XRInputSource ) {
@@ -150,15 +153,20 @@ export class GameScene {
     onSelectEnd(event: Event & {target: XRTargetRaySpace} & {data? : XRInputSource}) {
         event.target.userData.isSelecting = false;
 
+        console.log("Done Selecting");
+        console.log(this.INTERSECTION);
+
         if ( this.INTERSECTION ) {
 
             const offsetPosition = { x: - this.INTERSECTION.x, y: - this.INTERSECTION.y, z: - this.INTERSECTION.z, w: 1 };
             const offsetRotation = new Quaternion();
             const transform = new XRRigidTransform( offsetPosition, offsetRotation );
+            console.log(this.baseReferenceSpace)
             const teleportSpaceOffset = this.baseReferenceSpace?.getOffsetReferenceSpace( transform );
 
             if (teleportSpaceOffset)
             {
+                console.log("Moving");
                 this.renderer.xr.setReferenceSpace( teleportSpaceOffset );
             }
         }
@@ -185,9 +193,7 @@ export class GameScene {
             const intersects = this.raycaster.intersectObjects( [ this.floor! ] );
 
             if ( intersects.length > 0 ) {
-
                 this.INTERSECTION = intersects[ 0 ].point;
-
             }
 
         } else if ( this.controller2.userData.isSelecting === true ) {
