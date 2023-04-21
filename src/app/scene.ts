@@ -35,8 +35,6 @@ export class GameScene {
         this.scene.add( this.cube );
 
         const loader = new GLTFLoader();
-        console.log("Forest");
-        console.log(Forest)
         loader.load(Forest, ( gltf: GLTF ) => {
 
             this.scene.add( gltf.scene );
@@ -120,7 +118,6 @@ export class GameScene {
         controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
         this.scene.add( controllerGrip2 );
 
-        //this.renderer.xr.setReferenceSpaceType('bounded-floor');
         this.renderer.xr.addEventListener('sessionstart', () => {
             this.baseReferenceSpace = this.renderer.xr.getReferenceSpace() || undefined;
         });
@@ -153,20 +150,15 @@ export class GameScene {
     onSelectEnd(event: Event & {target: XRTargetRaySpace} & {data? : XRInputSource}) {
         event.target.userData.isSelecting = false;
 
-        console.log("Done Selecting");
-        console.log(this.INTERSECTION);
-
         if ( this.INTERSECTION ) {
 
             const offsetPosition = { x: - this.INTERSECTION.x, y: - this.INTERSECTION.y, z: - this.INTERSECTION.z, w: 1 };
             const offsetRotation = new Quaternion();
             const transform = new XRRigidTransform( offsetPosition, offsetRotation );
-            console.log(this.baseReferenceSpace)
             const teleportSpaceOffset = this.baseReferenceSpace?.getOffsetReferenceSpace( transform );
 
             if (teleportSpaceOffset)
             {
-                console.log("Moving");
                 this.renderer.xr.setReferenceSpace( teleportSpaceOffset );
             }
         }
@@ -216,12 +208,6 @@ export class GameScene {
         if ( this.INTERSECTION ) this.marker.position.copy( this.INTERSECTION );
 
         this.marker.visible = this.INTERSECTION !== undefined;
-
-
 	    this.renderer.render( this.scene, this.camera );
     }
 }
-
-
-
-//animate();
